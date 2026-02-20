@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+HARNESS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+branch="${FACTORY_BRANCH:-main}"
+
+usage() {
+  cat <<'EOF'
+Usage: ./factory <command>
+
+Commands:
+  update    Pull latest harness updates (default)
+  status    Show git status of the harness checkout
+  path      Print the installed harness path
+  help      Show this help
+EOF
+}
+
+command="${1:-update}"
+
+case "$command" in
+  update|pull)
+    cd "$HARNESS_ROOT"
+    git fetch --all --prune
+
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+      git checkout "$branch"
+    else
+      git checkout -B "$branch" "origin/$branch"
+    fi
+
+    git pull --ff-only origin "$branch"
+    ;;
+  status)
+    cd "$HARNESS_ROOT"
+    git status --short
+    ;;
+  path)
+    echo "$HARNESS_ROOT"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "Unknown command: $command"
+    usage
+    exit 1
+    ;;
+esac
