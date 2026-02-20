@@ -7,7 +7,7 @@ A lightweight bootstrap + updater for your personal AI harness repository.
 From the target project root:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/can1357/factory/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/chrisaddy/factory/main/install.sh | bash
 ```
 
 This command:
